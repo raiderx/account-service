@@ -28,6 +28,9 @@ public class Statistics {
         long start = this.start.get();
         long count = this.count.get();
         long end = System.currentTimeMillis();
+        if (end - start < 1000) {
+            return 0;
+        }
         return 1000 * count / (end - start);
     }
 
@@ -35,6 +38,9 @@ public class Statistics {
         long start = this.start.get();
         long count = this.count.get();
         long end = System.currentTimeMillis();
+        if (end - start < 60 * 1000) {
+            return 0;
+        }
         return 60 * 1000 * count / (end - start);
     }
 }

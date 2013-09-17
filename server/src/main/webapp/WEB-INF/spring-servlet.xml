@@ -12,17 +12,6 @@
 	   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <mvc:annotation-driven/>
-    <!--
-    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        <property name="messageConverters">
-            <list>
-                <ref bean="jacksonMessageConverter"/>
-            </list>
-        </property>
-    </bean>
-    <mvc:default-servlet-handler/>
-    -->
 
     <context:component-scan base-package="org.accountservice.server.dao, org.accountservice.server.service, org.accountservice.server.web"/>
 
@@ -31,14 +20,6 @@
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-
-    <!--
-    <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
-        <property name="objectMapper" ref="jacksonObjectMapper"/>
-    </bean>
-
-    <bean id="jacksonObjectMapper" class="org.linkweb.users.utils.CustomObjectMapper" />
-    -->
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"/>
@@ -50,19 +31,6 @@
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
-    <!--
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:application.properties"/>
-    </bean>
-
-    <bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
-    -->
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/accountservice"/>
 
 </beans>
