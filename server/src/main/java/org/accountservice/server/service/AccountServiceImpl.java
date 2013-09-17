@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Pavel Karpukhin
  */
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private Map<Integer, Long> cache = new HashMap<Integer, Long>();
     private AccountDao accountDao;
 
     @Autowired
@@ -22,25 +26,48 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional(readOnly = true)
     public Long getAmount(Integer id) {
-        Account account = accountDao.getAccountById(id);
-        if (account == null) {
-            return 0L;
+        synchronized (cache) {
+            Long amount = cache.get(id);
+            if (amount == null) {
+                Account account = accountDao.getAccountById(id);
+                if (account == null) {
+                    return 0L;
+                }
+                amount = account.getAmount();
+                cache.put(id, amount);
+            }
+            return amount;
         }
-        return account.getAmount();
     }
 
     @Override
     @Transactional
     public void addAmount(Integer id, Long value) {
-        Account account = accountDao.getAccountById(id);
-        if (account == null) {
-            account = new Account();
+        synchronized (cache) {
+            Long amount = cache.get(id);
+            if (amount == null) {
+                Account account = accountDao.getAccountById(id);
+                if (account == null) {
+                    amount = value;
+                    account = new Account();
+                    account.setId(id);
+                    account.setAmount(amount);
+                    accountDao.createAccount(account);
+                    cache.put(id, value);
+                } else {
+                    amount = account.getAmount() + value;
+                    account.setAmount(amount);
+                    accountDao.updateAccount(account);
+                }
+                cache.put(id, amount);
+                return;
+            }
+            amount += value;
+            Account account = new Account();
             account.setId(id);
-            account.setAmount(value);
-            accountDao.createAccount(account);
-        } else {
-            account.setAmount(account.getAmount() + value);
+            account.setAmount(amount);
             accountDao.updateAccount(account);
+            cache.put(id, amount);
         }
     }
 }
