@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+#IntelliJ IDEA project files
+.idea
+*.iml
+*.ipr
+*.iws
+
+target
