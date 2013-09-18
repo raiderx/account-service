@@ -11,6 +11,8 @@ Create user new user 'accountservice' in PostgreSQL:
 
 $ createuser -U postgres -D -P -R -S accountservice
 
+When PostgreSQL will ask you for the password for new user, specify password as user name.
+
 Create new database 'accountservice':
 
 $ createdb -E UTF-8 -O accountservice -U postgres accountservice
@@ -19,8 +21,12 @@ Create database schema:
 
 $ psql -f sql/schema.sql -U accountservice accountservice
 
-You have to put PostgreSQL JDBC driver in $CATALINA_BASE/lib folder
+Put PostgreSQL JDBC driver in $CATALINA_BASE/lib folder.
 
-Then you have to build the application:
+Build the application:
 
 $ mvn package
+
+Find server.war in target folder and put it in $CATALINA_BASE/webapps folder.
+
+Start Apache Tomcat.
