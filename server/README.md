@@ -30,3 +30,5 @@ $ mvn package
 Find server.war in target folder and put it in $CATALINA_BASE/webapps folder.
 
 Start Apache Tomcat.
+
+Open http://localhost:8080/ in browser
